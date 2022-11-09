@@ -1,27 +1,27 @@
 package com.example.randombugcatcher;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.randombugcatcher.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +29,31 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Button button = findViewById(R.id.btnCatch);
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
+        // https://stackoverflow.com/questions/60750078/android-studio-java-fab-onclick-alert-dialog-makes-app-crash
+        // https://developer.android.com/develop/ui/views/components/dialogs
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle(R.string.diaTitle)
+                        .setMessage(R.string.diaMessage)
+                        .setNegativeButton(R.string.diaCancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+
+                            }
+                        })
+                        .setPositiveButton(R.string.diaConfirm, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //mValues.remove(holder.mItem);
+                                //setEvents(mValues);
+                            }
+                        }).create().show();
             }
         });
     }
@@ -50,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+    public void catchBug(View view) {
+        String bugName = BugDB.common[0];
+        String bugLatin = BugDB.latin[0];
+        int bugImage = BugDB.images[0];
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle(bugName)
+                .setMessage(bugLatin + "" + bugImage)
+                .create().show();
     }
 
     @Override
@@ -65,12 +87,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 }
