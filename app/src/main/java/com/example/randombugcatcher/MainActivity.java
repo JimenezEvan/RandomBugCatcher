@@ -1,13 +1,18 @@
 package com.example.randombugcatcher;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
+import java.util.Calendar;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.randombugcatcher.databinding.ActivityMainBinding;
@@ -15,7 +20,6 @@ import com.example.randombugcatcher.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,12 +54,21 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.diaConfirm, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //mValues.remove(holder.mItem);
-                                //setEvents(mValues);
+                                BugListViewModel m = new ViewModelProvider(MainActivity.this).get(BugListViewModel.class);
+                                m.removeAllBugs();
                             }
                         }).create().show();
             }
+
         });
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 14);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent1 = new Intent(MainActivity.this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) MainActivity.this.getSystemService(MainActivity.this.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     @Override
@@ -65,15 +78,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     public void catchBug(View view) {
-        String bugName = BugDB.common[0];
-        String bugLatin = BugDB.latin[0];
-        int bugImage = BugDB.images[0];
+        Bug bug = new Bug(Bug.getBugNum());
+        //add to list
+        BugListViewModel viewModel = new ViewModelProvider(this).get(BugListViewModel.class);
+        viewModel.addBug(bug);
+        //dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle(bugName)
-                .setMessage(bugLatin + "" + bugImage)
-                .create().show();
-    }
 
+        builder.setTitle(bug.name);
+        builder.setMessage(bug.latin);
+        builder.setIcon(R.drawable.bugtestimg1);
+
+        builder.create().show();
+        //
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

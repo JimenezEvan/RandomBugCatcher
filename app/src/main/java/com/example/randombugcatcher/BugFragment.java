@@ -1,9 +1,13 @@
 package com.example.randombugcatcher;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,8 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.randombugcatcher.placeholder.PlaceholderContent;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -23,6 +33,8 @@ public class BugFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private static final String PREFS = "shared_prefs";
+    private static final String SAVED_BUGS = "saved_events";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,8 +76,27 @@ public class BugFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyBugRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            BugRecyclerViewAdapter adapter = new BugRecyclerViewAdapter(context);
+            recyclerView.setAdapter(adapter);
+            BugListViewModel bugListViewModel = new ViewModelProvider((ViewModelStoreOwner) context).get(BugListViewModel.class);
+            bugListViewModel.getBugs().observe(getViewLifecycleOwner(), new Observer<List<Bug>>() {
+                @Override
+                public void onChanged(List<Bug> bugs) {
+                    adapter.setEvents(bugs);
+                }
+            });
         }
         return view;
+    }
+
+
+    private ArrayList<Bug> getBugs() {
+        SharedPreferences pref = requireActivity().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String bugsJSON = pref.getString(SAVED_BUGS, "");
+        Type type = new TypeToken<ArrayList<Bug>>(){}.getType();
+        ArrayList<Bug> bugs = gson.fromJson(bugsJSON, type);
+        if(bugs == null) return new ArrayList<>();
+        else return bugs;
     }
 }
