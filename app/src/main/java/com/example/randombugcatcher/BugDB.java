@@ -27,8 +27,7 @@ public class BugDB {
             "9el raro :>"
     };
     //images
-    public static int[] images = {
-        R.drawable.bugtestimg1
-            /*,1,2,3,4,5,6,7,8,9*/
+    public static String[] links = {
+
     };
 }

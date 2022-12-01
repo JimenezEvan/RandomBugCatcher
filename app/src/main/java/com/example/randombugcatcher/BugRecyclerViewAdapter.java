@@ -24,7 +24,7 @@ public class BugRecyclerViewAdapter extends RecyclerView.Adapter<BugRecyclerView
     private List<Bug> mValues;
 
     private static final String PREFS = "shared_prefs";
-    private static final String SAVED_EVENTS = "saved_events";
+    private static final String SAVED_EVENTS = "saved_bugs";
     private final Context context;
 
     public BugRecyclerViewAdapter(Context context) {
@@ -51,7 +51,7 @@ public class BugRecyclerViewAdapter extends RecyclerView.Adapter<BugRecyclerView
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
                 builder.setTitle(holder.mItem.name);
-                builder.setMessage(holder.mItem.latin + "\nMore Info: " + "link");
+                builder.setMessage(holder.mItem.latin + "\nMore Info");
 
                 builder.create().show();
             }
