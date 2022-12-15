@@ -34,7 +34,7 @@ public class BugFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private static final String PREFS = "shared_prefs";
-    private static final String SAVED_BUGS = "saved_events";
+    private static final String SAVED_BUGS = "saved_bugs";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,6 +83,7 @@ public class BugFragment extends Fragment {
                 @Override
                 public void onChanged(List<Bug> bugs) {
                     adapter.setEvents(bugs);
+                    MainActivity.setBugCount(adapter.getItemCount());
                 }
             });
         }

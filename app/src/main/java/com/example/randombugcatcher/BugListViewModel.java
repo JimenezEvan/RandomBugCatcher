@@ -4,10 +4,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -16,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BugListViewModel extends AndroidViewModel {
+
+
     private static final String PREFS = "shared_prefs";
     private static final String SAVED_EVENTS = "saved_bugs";
     private MutableLiveData<List<Bug>> bugs;
@@ -30,6 +38,7 @@ public class BugListViewModel extends AndroidViewModel {
         bugs.setValue(loadBugs());
         savedStateHandle.set("bugs", bugs.getValue());
     }
+    
 
     private List<Bug> loadBugs() {
         SharedPreferences pref = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE);

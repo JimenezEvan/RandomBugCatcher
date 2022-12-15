@@ -3,23 +3,30 @@ package com.example.randombugcatcher;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bug implements Parcelable {
     public String name;
     public String latin;
-    public String link;
-    public Bug(int bug) {
-        name = BugDB.common[bug];
-        latin = BugDB.latin[bug];
-        //link = BugDB.links[bug];
+    public String url;
+
+    public Bug(Integer bug) {
+        name = BugDB.bugList(bug).name;
+        latin = BugDB.bugList(bug).latin;
+        url = BugDB.bugList(bug).url;
+    }
+    public Bug() {
+
     }
 
     protected Bug(Parcel in) {
         name = in.readString();
         latin = in.readString();
-        link = in.readString();
+        url = in.readString();
     }
 
     public static final Creator<Bug> CREATOR = new Creator<Bug>() {
@@ -34,8 +41,8 @@ public class Bug implements Parcelable {
         }
     };
 
-    public static int getBugNum() {
-        return (int) (Math.random() * BugDB.common.length);
+    public static Integer getBugNum() {
+        return (Integer) (int) (Math.random() * BugDB.size());
     }
 
     @Override
@@ -47,6 +54,31 @@ public class Bug implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(latin);
-        parcel.writeString(link);
+        parcel.writeString(url);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLatin() {
+        return latin;
+    }
+
+    public void setLatin(String latin) {
+        this.latin = latin;
+    }
+
+    public String getURL() {
+        return url;
+    }
+
+    public void setURL(String link) {
+        this.url = link;
+    }
+
 }

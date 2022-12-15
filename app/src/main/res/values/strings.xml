@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RandomBugCatcher</string>
+    <string name="app_name">Random Bug Catcher</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -27,4 +27,7 @@
     <string name="diaCancel">no :(</string>
     <string name="diaConfirm">yes >:)</string>
     <string name="btnCatch">Catch Bug</string>
+    <string name="txtSettings">Settings</string>
+    <string name="swiNotif">Toggle Notifications</string>
+    <string name="swiImage">Toggle Images</string>
 </resources>

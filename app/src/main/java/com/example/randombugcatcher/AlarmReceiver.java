@@ -24,9 +24,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);//getting the pendingIntent
 
         Notification.Builder builder = new Notification.Builder(context, CHANNEL_ID);//building the notification
-        int bug = Bug.getBugNum();
-        Notification notification = builder.setContentTitle(BugDB.common[bug])
-                .setContentText(BugDB.latin[bug])
+        Bug bug = new Bug(Bug.getBugNum());
+        Notification notification = builder.setContentTitle(bug.name)
+                .setContentText(bug.latin)
                 .setSmallIcon(R.drawable.bug_notif).build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
